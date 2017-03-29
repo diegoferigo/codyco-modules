@@ -1632,6 +1632,7 @@ void WholeBodyDynamicsDevice::publishExternalWrenches()
 
             wrench.header.seq = rosMessageSequence;
             wrench.header.stamp = normalizeSecNSec(yarp::os::Time::now());
+            wrench.header.frame_id = outputWrenchPorts[i].link;
 
             wrench.wrench.force.x = outputWrenchPorts[i].output_vector(0);
             wrench.wrench.force.y = outputWrenchPorts[i].output_vector(1);
