@@ -681,6 +681,7 @@ bool WholeBodyDynamicsDevice::loadSettingsFromConfig(os::Searchable& config)
     falseValue.fromString("false");
     if (prop.check("publishOnROS", falseValue, "Checking ROS enabled").asBool()) {
         publisherNode = new yarp::os::Node("/wholeBodyDynamics");
+        rosTFPrefix = prop.check("rosTFPrefix", yarp::os::Value(""), "Checking TF prefix for ROS topics").asString();
     }
 
 
@@ -1632,7 +1633,7 @@ void WholeBodyDynamicsDevice::publishExternalWrenches()
 
             wrench.header.seq = rosMessageSequence;
             wrench.header.stamp = normalizeSecNSec(yarp::os::Time::now());
-            wrench.header.frame_id = outputWrenchPorts[i].link;
+            wrench.header.frame_id = rosTFPrefix + outputWrenchPorts[i].link;
 
             wrench.wrench.force.x = outputWrenchPorts[i].output_vector(0);
             wrench.wrench.force.y = outputWrenchPorts[i].output_vector(1);
