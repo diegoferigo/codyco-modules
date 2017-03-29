@@ -24,6 +24,9 @@
 // Filters
 #include "ctrlLibRT/filters.h"
 
+// ROS msgs include
+#include <geometry_msgs/WrenchStamped.h>
+
 #include <wholeBodyDynamicsSettings.h>
 #include <wholeBodyDynamics_IDLServer.h>
 #include "SixAxisForceTorqueMeasureHelpers.h"
@@ -31,6 +34,14 @@
 
 #include <vector>
 
+
+namespace yarp {
+    namespace os {
+        class Node;
+        template<typename T>
+        class Publisher;
+    }
+}
 
 namespace yarp {
 namespace dev {
@@ -51,6 +62,9 @@ struct outputWrenchPortInformation
     iDynTree::FrameIndex orientation_frame_index;
     yarp::sig::Vector output_vector;
     yarp::os::BufferedPort<yarp::sig::Vector> * output_port;
+
+    yarp::os::Publisher<geometry_msgs::WrenchStamped> *rosPublishers;
+
 };
 
 
@@ -519,6 +533,9 @@ private:
      * removing offset and using a secondary calibration matrix.
      */
     std::vector<wholeBodyDynamics::SixAxisForceTorqueMeasureProcessor> ftProcessors;
+
+    yarp::os::Node *publisherNode; /*!< node to publish on the ROS topics */
+    unsigned rosMessageSequence;
 
     /***
      * RPC Calibration related methods
