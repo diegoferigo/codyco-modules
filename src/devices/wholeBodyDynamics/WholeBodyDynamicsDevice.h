@@ -12,6 +12,7 @@
 #include <yarp/os/RateThread.h>
 #include <yarp/os/RpcServer.h>
 #include <yarp/os/Semaphore.h>
+#include <yarp/os/ThreadStats.h>
 
 // iCub includes
 #include <iCub/skinDynLib/skinContactList.h>
@@ -396,6 +397,11 @@ private:
      * A port for editing remotly the setting of wholeBodyDynamics
      */
     yarp::os::Port settingsPort;
+
+    /**
+     * Class for calculating function call statistics
+     */
+    yarp::os::MultipleThreadStats stats;
 
     /**
      * Open-related methods

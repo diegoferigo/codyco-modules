@@ -30,6 +30,8 @@ WholeBodyDynamicsDevice::WholeBodyDynamicsDevice()
     , estimationWentWell(false)
     , validOffsetAvailable(false)
     , settingsEditor(settings)
+    , stats(0.01, 30, 5)
+
 {
     // Calibration quantities
     calibrationBuffers.ongoingCalibration = false;
@@ -40,6 +42,10 @@ WholeBodyDynamicsDevice::WholeBodyDynamicsDevice()
     calibrationBuffers.measurementSumBuffer.resize(0);
     calibrationBuffers.nrOfSamplesToUseForCalibration        = 0;
     calibrationBuffers.nrOfSamplesUsedUntilNowForCalibration = 0;
+
+    // Tick-tock statistics
+    stats.newThreadStats(0);
+    stats.enableAdvancedStatistics(0);
 }
 
 WholeBodyDynamicsDevice::~WholeBodyDynamicsDevice()
@@ -1570,7 +1576,9 @@ void WholeBodyDynamicsDevice::run()
         this->filterSensorsAndRemoveSensorOffsets();
 
         // Update kinematics
+        stats.tick(0);
         this->updateKinematics();
+        stats.tock(0);
 
         // Read contacts info from the skin or from assume contact location
         this->readContactPoints();
